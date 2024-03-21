@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminBaseController;
+use App\Http\Controllers\Admin\DataUser\DataUserController;
+use App\Http\Controllers\Staff\StaffController;
+use App\Http\Controllers\User\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,5 +23,35 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+// Akses Admin
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function() {
+    Route::controller(AdminBaseController::class)->group(function () {
+        Route::get('/home', 'index')->name('index.home');
+    });
+    Route::controller(DataUserController::class)->group(function () {
+        Route::get('/dataUser', 'dataUser')->name('index.dataUser');
+        Route::get('/dataUser/form', 'dataUserForm')->name('dataUser.form');
+        Route::post('/dataUser/form/create', 'dataUserCreate')->name('dataUser.create');
+        Route::delete('/dataUser/form/delete', 'dataUserDelete')->name('dataUser.delete');
+        Route::get('/dataUser/search', 'dataUserSeacrh')->name('dataUser.search');
+    });
+});
+
+// Akses Staff
+
+Route::prefix('staff')->middleware(['auth', 'isStaff'])->group(function() {
+    Route::controller(StaffController::class)->group(function () {
+        Route::get('/home', 'index')->name('index.staff.home');
+    });
+});
+
+// Akses User
+Route::prefix('user')->middleware(['auth', 'isUser'])->group(function() {
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/home', 'index')->name('index.user.home');
+    });
+});
+
+
+
