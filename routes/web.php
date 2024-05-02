@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminBaseController;
 use App\Http\Controllers\Admin\DataUser\DataUserController;
+use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Staff\StaffController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -35,6 +36,16 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function() {
         Route::post('/dataUser/form/create', 'dataUserCreate')->name('dataUser.create');
         Route::delete('/dataUser/form/delete', 'dataUserDelete')->name('dataUser.delete');
         Route::get('/dataUser/search', 'dataUserSeacrh')->name('dataUser.search');
+    });
+    Route::controller(ProdukController::class)->group(function () {
+        Route::get('/produk', 'indexProduk')->name('index.produk');
+        Route::get('/dataProduk/form', 'dataProdukForm')->name('dataProduk.form');
+        Route::post('/dataProduk/form/create', 'dataProdukCreate')->name('dataProduk.create');
+        Route::get('/dataProduk/form/edit/{id}', 'dataProdukFormEdit')->name('dataProduk.form.edit');
+        Route::put('/dataProduk/form/update/{id}', 'dataProdukUpdate')->name('dataProduk.update');
+        Route::get('/dataProduk/search', 'dataProdukSeacrh')->name('dataProduk.search');
+        Route::delete('/dataProduk/form/delete', 'dataProdukDelete')->name('dataProduk.delete');
+
     });
 });
 

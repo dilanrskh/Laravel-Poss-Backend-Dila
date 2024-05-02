@@ -37,7 +37,13 @@ class DataUserController extends Controller
         return redirect()->back()->with('Delete', "Data User $request->name berhasil dihapus");
     }
 
-    public function dataUserSeacrh(){
-        
+    public function dataUserSeacrh(Request $request){
+        if($request->has('search')){
+            $user = User::where('name', 'LIKE', '%'.$request->search.'%')->get();
+        }else{
+            $user = User::all();
+        }
+
+        return view('Admin.DataUser.indexDataUser', compact('user'));
     }
 }

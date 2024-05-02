@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'General Dashboard')
+@section('title', 'Dashboard Produk')
 
 @push('style')
 <!-- CSS Libraries -->
@@ -14,21 +14,21 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Dashboard</h1>
+            <h1>Dashboard Produk</h1>
         </div>
 
         <div>
             <div class="card">
                 <div class="card-header">
-                    <h4>Data User</h4>
+                    <h4>Data Produk</h4>
                     <div class="card-header-action">
-                        <a href="{{ route('dataUser.form') }}" class="btn btn-primary">Add Data</a>
+                        <a href="{{ route('dataProduk.form') }}" class="btn btn-primary">Add Data</a>
                     </div>
 
                     <!-- Search -->
                     <div class="card-tools pl-3">
                         <div class="input-group input-group-sm" style="width: 250px;">
-                            <form action="{{ route('dataUser.search') }}" method="get">
+                            <form action="{{ route('dataProduk.search') }}" method="get">
                                 <div class="input-group-append">
                                     <input type="search" name="search" class="form-control float-right" placeholder="Search">
                                     <button type="submit" class="btn btn-default">
@@ -64,30 +64,33 @@
                         <table class="table-striped mb-0 table">
                             <thead>
                                 <tr>
-                                    <th>Nama User</th>
-                                    <th>Nomor Telepon</th>
-                                    <th>Alamat Email</th>
-                                    <th>Tanggal Daftar</th>
+                                    <th>No.</th>
+                                    <th>Nama Produk</th>
+                                    <th>Kategori Produk</th>
+                                    <th width="5%">Image</th>
+                                    <th>Harga</th>
+                                    <th>Stock</th>
+                                    <th>Tanggal Input</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($user as $row)
+                                @foreach($produk as $row)
                                 <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $row->name }}</td>
+                                    <td>{{ $row->category }}</td>
+                                    <td> <img src="{{ asset('storage/products/'.$row->image) }}" alt="" class="img-fluid"></td>
+                                    <td>{{ $row->harga }}</td>
+                                    <td>{{ $row->stock }}</td>
+                                    <td>{{ $row->created_at }}</td>
                                     <td>
-                                        {{ $row->name }}
-                                    </td>
-                                    <td>
-                                        {{ $row->phone }}
-                                    </td>
-                                    <td>{{ $row->email }}</td>
-                                    <td>
-                                        <!-- <a class="btn btn-danger btn-action" data-toggle="modal" data-target="#delete{{ $row->id }}"><i class="fas fa-trash"></i></a> -->
-                                        {{ $row-> created_at }}
-                                    </td>
-                                    <td>
-                                           <!-- Delete -->
-                                           <form action="{{ route('dataUser.delete') }}" method="post">
+                                        <a href="{{ route('dataProduk.form.edit', $row->id) }}" class="btn btn-primary btn-action mr-1" title="Edit data">
+                                            <i class="fas fa-pencil"></i>
+                                        </a>
+
+                                        <!-- Delete -->
+                                        <form action="{{ route('dataProduk.delete') }}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="id" value="{{ $row->id }}">
@@ -106,6 +109,8 @@
             </div>
         </div>
     </section>
+    <!-- Modal -->
+
 </div>
 
 @endsection
