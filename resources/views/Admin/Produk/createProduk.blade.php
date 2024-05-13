@@ -32,8 +32,8 @@
                             <input type="text" name="name" id="name" required class="form-control">
                         </div>
                         <div class="form-group">
-                            <label>Harga</label>
-                            <input type="text" name="harga" id="harga" required class="form-control">
+                            <label>Price</label>
+                            <input type="text" name="price" id="price" required class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Stock</label>

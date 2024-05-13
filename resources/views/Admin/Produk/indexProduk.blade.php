@@ -68,7 +68,7 @@
                                     <th>Nama Produk</th>
                                     <th>Kategori Produk</th>
                                     <th width="5%">Image</th>
-                                    <th>Harga</th>
+                                    <th>Price</th>
                                     <th>Stock</th>
                                     <th>Tanggal Input</th>
                                     <th>Action</th>
@@ -81,7 +81,7 @@
                                     <td>{{ $row->name }}</td>
                                     <td>{{ $row->category }}</td>
                                     <td> <img src="{{ asset('storage/products/'.$row->image) }}" alt="" class="img-fluid"></td>
-                                    <td>{{ $row->harga }}</td>
+                                    <td>{{ $row->price }}</td>
                                     <td>{{ $row->stock }}</td>
                                     <td>{{ $row->created_at }}</td>
                                     <td>

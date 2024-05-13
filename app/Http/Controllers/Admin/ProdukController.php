@@ -20,7 +20,7 @@ class ProdukController extends Controller
     public function dataProdukCreate(Request $request){
         $request->validate([
             'name' => 'required',
-            'harga' => 'required',
+            'price' => 'required',
             'stock' => 'required',
             'category' => 'required',
             'deskripsi' => 'required',
@@ -33,7 +33,7 @@ class ProdukController extends Controller
 
         Produk::create([
             'name' => $request->name,
-            'harga' => $request->harga,
+            'price' => $request->price,
             'stock' => $request->stock,
             'deskripsi' => $request->deskripsi,
             'category' => $request->category,
@@ -51,7 +51,7 @@ class ProdukController extends Controller
     public function dataProdukUpdate(Request $request, $id){
         $request->validate([
             'name' => 'required',
-            'harga' => 'required',
+            'price' => 'required',
             'stock' => 'required',
             'category' => 'required',
             'deskripsi' => 'required',
@@ -63,7 +63,7 @@ class ProdukController extends Controller
         if($request->file('image') == "") {
             $produk->update([
                 'name' => $request->name,
-                'harga' => $request->harga,
+                'price' => $request->price,
                 'stock' => $request->stock,
                 'deskripsi' => $request->deskripsi,
                 'category' => $request->category,
@@ -75,7 +75,7 @@ class ProdukController extends Controller
 
             $produk->update([
                 'name' => $request->name,
-                'harga' => $request->harga,
+                'price' => $request->price,
                 'stock' => $request->stock,
                 'deskripsi' => $request->deskripsi,
                 'category' => $request->category,

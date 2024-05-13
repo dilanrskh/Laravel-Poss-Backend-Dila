@@ -12,6 +12,101 @@ use Illuminate\Support\Facades\Validator;
 
 class ProdukApiController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+    //     $produk = Produk::get()
+    //     ->map(function ($produk) {
+    //         return $this->format($produk);
+    //     });
+    // return $this->respons($produk);
+
+     //all products
+     $products = Produk::orderBy('id', 'desc')->get();
+     return response()->json([
+         'success' => true,
+         'message' => 'List Data Product',
+         'data' => $products
+     ], 200);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:3',
+            'price' => 'required|integer',
+            'stock' => 'required|integer',
+            'category' => 'required|in:food,drink,snack',
+            'image' => 'required|image|mimes:png,jpg,jpeg'
+        ]);
+
+        $filename = time() . '.' . $request->image->extension();
+        $request->image->storeAs('public/products', $filename);
+        $product = Produk::create([
+            'name' => $request->name,
+            'price' => (int) $request->price,
+            'stock' => (int) $request->stock,
+            'category' => $request->category,
+            'image' => $filename,
+            'is_best_seller' => $request->is_best_seller
+        ]);
+
+        if ($product) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Product Created',
+                'data' => $product
+            ], 201);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product Failed to Save',
+            ], 409);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $produk = Produk::where('id', $id)
+            ->get()
+            ->map(function ($produk) {
+                return $this->format($produk);
+            });
+        return $this->respons($produk);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $produk = Produk::where('id', $id)->first();
+
+        if(!$produk) {
+            return MessageHelper::error(false, 'Data Tidak ditemukan');
+        }
+
+        Storage::delete($produk->image);
+        $produk->delete();
+        return MessageHelper::error(true, 'Berhasil Menghapus Data');
+    }
+
     public function format($produk)
     {
 
@@ -19,10 +114,11 @@ class ProdukApiController extends Controller
             'id' => $produk->id,
             'name' => $produk->name,
             'deskripsi' => $produk->deskripsi,
-            'harga' => $produk->harga,
+            'price' => $produk->price,
             'stock' => $produk->stock,
             'category' => $produk->category,
             'image' => $produk->image,
+            'is_best_seller' => $produk->is_best_seller,
             'tanggal_tambah_produk' => Carbon::parse($produk->created_at)->translatedFormat('d F Y'),
         ];
     }
@@ -41,112 +137,5 @@ class ProdukApiController extends Controller
             'status' => $status,
             'message' => $msg,
         ], 200);
-    }
-
-    public function indexProduk()
-    {
-        $produk = Produk::get()
-            ->map(function ($produk) {
-                return $this->format($produk);
-            });
-        return $this->respons($produk);
-    }
-
-    public function detailProduk($id)
-    {
-        $produk = Produk::where('id', $id)
-            ->get()
-            ->map(function ($produk) {
-                return $this->format($produk);
-            });
-        return $this->respons($produk);
-    }
-
-    public function createProduk(Request $request)
-    {
-        $validasi = Validator::make($request->all(), [
-            'name' => 'required',
-            'deskripsi' => 'required',
-            'harga' => 'required|numeric',
-            'stock' => 'required',
-            'category' => 'required',
-            'image' => 'required',
-        ]);
-
-        if ($validasi->fails()) {
-            $valIndex = $validasi->errors()->all();
-            return MessageHelper::error(false, $valIndex[0]);
-        }
-
-        $produk = Produk::create([
-            'name' => $request->name,
-            'harga' => $request->harga,
-            'deskripsi' => $request->deskripsi,
-            'category' => $request->category,
-            'stock' => $request->stock,
-            'image' => $request->file('image')->store('images'),
-        ]);
-
-        $produk = Produk::where('id', $produk->id)
-        ->get()
-        ->map(function ($produk) {
-            return $this->format($produk);
-        });
-        return $this->respons($produk);
-    }
-
-    public function deleteProduk($id){
-
-        $produk = Produk::where('id', $id)->first();
-
-        if(!$produk) {
-            return MessageHelper::error(false, 'Data Tidak ditemukan');
-        }
-
-        Storage::delete($produk->image);
-        $produk->delete();
-        return MessageHelper::error(true, 'Berhasil Menghapus Data');
-    }
-
-    public function updateProduk(Request $request, $id){
-        $produk = Produk::where('id', $id)->first();
-
-        if(!$produk){
-            return MessageHelper::error(false, "Data Bootcamp tidak ditemukan !");
-        }
-
-        $validasi = Validator::make($request->all(), [
-            'name' => ['required'],
-            'harga' => 'required|numeric',
-            'deskripsi' => ['required'],
-            'stock' => ['required'],
-            'category' => ['required'],
-            'image' => 'nullable',
-        ]);
-
-        if($validasi->fails()) {
-            $valIndex = $validasi->errors()->all();
-            return MessageHelper::error(false, $valIndex[0]);
-        }
-
-        $produk->update([
-            'name' =>$request->name,
-            'deskripsi' =>$request->deskripsi,
-            'harga' =>$request->harga,
-            'stock' =>$request->stock,
-            'category' =>$request->stock,
-            // 'image' =>$request->file('image')->store('images'),
-        ]);
-
-        $detail = Produk::where('id', $produk->id)
-        ->get()
-        ->map(function ($produk) {
-            return $this->format($produk);
-        });
-
-        $msg = "Berhasil Update Data Produk";
-        $token = $produk->createToken('auth_token')->plainTextToken;
-
-        return MessageHelper::resulAuth(true, $msg, $detail, 200, $token);
     }
 }
