@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\OrderApiController;
 use App\Http\Controllers\Api\ProdukApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +35,5 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
 
 Route::apiResource('products', ProdukApiController::class)->middleware('auth:sanctum');
+
+Route::apiResource('orders', OrderApiController::class)->middleware('auth:sanctum');

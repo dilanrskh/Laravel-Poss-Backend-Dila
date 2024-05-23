@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Dashboard Produk')
+@section('title', 'Dashboard Order Produk')
 
 @push('style')
 <!-- CSS Libraries -->
@@ -14,21 +14,21 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Dashboard Produk</h1>
+            <h1>Dashboard Order Produk</h1>
         </div>
 
         <div>
             <div class="card">
                 <div class="card-header">
-                    <h4>Data Produk</h4>
+                    <h4>Data Order Produk</h4>
                     <div class="card-header-action">
-                        <a href="{{ route('dataProduk.form') }}" class="btn btn-primary">Add Data</a>
+                        <!-- <a href="{{ route('dataProduk.form') }}" class="btn btn-primary">Add Data</a> -->
                     </div>
 
                     <!-- Search -->
                     <div class="card-tools pl-3">
                         <div class="input-group input-group-sm" style="width: 250px;">
-                            <form action="{{ route('dataProduk.search') }}" method="get">
+                            <form action="#" method="get">
                                 <div class="input-group-append">
                                     <input type="search" name="search" class="form-control float-right" placeholder="Search">
                                     <button type="submit" class="btn btn-default">
@@ -65,37 +65,35 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Nama Produk</th>
-                                    <th>Kategori Produk</th>
-                                    <th width="5%">Image</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Tanggal Input</th>
-                                    <th>Action</th>
+                                    <th>Waktu Transaksi</th>
+                                    <th>Total Harga</th>
+                                    <th>Total Item</th>
+                                    <th>Nama Kasir</th>
+                                    <th width="1%">Detail</th>
+                                    <th width="1%">Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($produk as $row)
+                                @foreach($order as $row)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $row->name }}</td>
-                                    <td>{{ $row->category }}</td>
-                                    <td> <img src="{{ asset('storage/products/'.$row->image) }}" alt="" class="img-fluid"></td>
-                                    <td>{{ $row->price }}</td>
-                                    <td>{{ $row->stock }}</td>
-                                    <td>{{ $row->created_at }}</td>
+                                    <td>{{ $row->transaction_time }}</td>
+                                    <td>{{ $row->total_price }}</td>
+                                    <td>{{ $row->total_item }}</td>
+                                    <td>{{ $row->kasir->name }}</td>
                                     <td>
-                                        <a href="{{ route('dataProduk.form.edit', $row->id) }}" class="btn btn-primary btn-action" title="Edit data">
-                                            <i class="fas fa-pencil" style="vertical-align: middle; display: inline-block;"></i>
+                                        <a href="{{ route('order.show', $row->id) }}" class="btn btn-primary btn-action mr-1" title="Edit data">
+                                            <i class="fas fa-eye"></i>
                                         </a>
-
+                                    </td>
+                                    <td>
                                         <!-- Delete -->
-                                        <form action="{{ route('dataProduk.delete') }}" method="post">
+                                        <form action="#" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="id" value="{{ $row->id }}">
                                             <button type="submit" href="#" class="btn btn-danger btn-action" title="Delete data">
-                                                <i class="fas fa-trash" style="vertical-align: middle; display: inline-block;"></i>
+                                                <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
                                         <!-- End Delete -->

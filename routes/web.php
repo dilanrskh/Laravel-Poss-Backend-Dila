@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminBaseController;
 use App\Http\Controllers\Admin\DataUser\DataUserController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\OrderItemController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Staff\StaffController;
 use App\Http\Controllers\User\UserController;
@@ -45,8 +47,9 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function() {
         Route::put('/dataProduk/form/update/{id}', 'dataProdukUpdate')->name('dataProduk.update');
         Route::get('/dataProduk/search', 'dataProdukSeacrh')->name('dataProduk.search');
         Route::delete('/dataProduk/form/delete', 'dataProdukDelete')->name('dataProduk.delete');
-
     });
+    Route::resource('order', OrderController::class);
+    Route::resource('order_item', OrderItemController::class);
 });
 
 // Akses Staff

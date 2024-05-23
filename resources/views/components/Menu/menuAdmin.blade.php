@@ -26,6 +26,11 @@
                     <a class="nav-link" href="{{ route('index.produk') }}">Data Produk</a>
                 </li>
             </ul>
+            <ul class="dropdown-menu">
+                <li class=''>
+                    <a class="nav-link" href="{{ route('order.index') }}">Data Order Produk</a>
+                </li>
+            </ul>
         </li>
     </ul>
 </aside>
